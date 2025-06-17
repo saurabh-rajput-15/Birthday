@@ -125,6 +125,61 @@
           font-size: 1.4em;
         }
       }
+Volume Alert Styles */
+  .volume-alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(168, 134, 121, 0.9);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+    font-family: 'Lato', sans-serif;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+  
+  .volume-alert.show {
+    opacity: 1;
+    animation: pulse 2s infinite;
+    pointer-events: auto;
+  }
+  
+  .volume-icon {
+    font-size: 24px;
+  }
+  
+  @keyframes pulse {
+    0% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.05); }
+    100% { transform: translateX(-50%) scale(1); }
+  }
+  
+  #play-btn {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #a88679;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: all 0.3s ease;
+  }
+  
+  #play-btn:hover {
+    background-color: #8b6a60;
+    transform: scale(1.05);
+  }
+
     </style>
 </head>
 <body>
