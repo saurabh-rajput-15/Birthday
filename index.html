@@ -303,41 +303,54 @@
   const speeds = 40; // typing speed (ms per character)
 
   let audioStarted = false;
-  let userInteracted = false;
+  let audioPlaying = false;
 
   // Function to start audio
   function startAudio() {
-    if (!audioStarted) {
-      const music = document.getElementById("bg-music");
-      if (music) {
+    const music = document.getElementById("bg-music");
+    if (music && !audioPlaying) {
+      // Check if audio is loaded
+      if (music.readyState >= 2) { // HAVE_CURRENT_DATA or better
         music.play().then(() => {
           console.log("Audio started successfully");
+          audioPlaying = true;
           audioStarted = true;
           // Alert user to turn up volume
           setTimeout(() => {
             alert("🎵 Turn up your volume for the best experience! 🎵");
-          }, 1000);
+          }, 500);
         }).catch((error) => {
-          console.log("Autoplay failed:", error);
-          // Show alert asking user to click to play music
-          alert("Click anywhere on the page to start the birthday music! 🎵");
+          console.log("Audio play failed:", error);
+          showClickPrompt();
         });
+      } else {
+        // Wait for audio to load
+        music.addEventListener('canplay', () => {
+          startAudio();
+        }, { once: true });
       }
+    }
+  }
+
+  // Show click prompt
+  function showClickPrompt() {
+    if (!audioStarted) {
+      alert("🎵 Click anywhere on the page to start the birthday music! 🎂");
     }
   }
 
   // Function to handle user interaction
   function handleUserInteraction() {
-    if (!userInteracted) {
-      userInteracted = true;
+    if (!audioStarted) {
       startAudio();
+      // Remove event listeners after first interaction
       document.removeEventListener('click', handleUserInteraction);
       document.removeEventListener('keydown', handleUserInteraction);
       document.removeEventListener('touchstart', handleUserInteraction);
     }
   }
 
-  // Add event listeners for user interaction
+  // Add event listeners for user interaction immediately
   document.addEventListener('click', handleUserInteraction);
   document.addEventListener('keydown', handleUserInteraction);
   document.addEventListener('touchstart', handleUserInteraction);
@@ -345,22 +358,32 @@
   function typeLine(text, elementId, delay) {
     setTimeout(() => {
       const elem = document.getElementById(elementId);
-      let i = 0;
-      const typing = setInterval(() => {
-        if (i < text.length) {
-          elem.textContent += text.charAt(i);
-          i++;
-        } else {
-          clearInterval(typing);
-        }
-      }, speeds);
+      if (elem) {
+        let i = 0;
+        const typing = setInterval(() => {
+          if (i < text.length) {
+            elem.textContent += text.charAt(i);
+            i++;
+          } else {
+            clearInterval(typing);
+          }
+        }, speeds);
+      }
     }, delay);
   }
 
-  // Try to start audio immediately (will work if autoplay is allowed)
-  setTimeout(() => {
-    startAudio();
-  }, 100);
+  // Try autoplay when page loads
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      startAudio();
+      // If audio didn't start after 2 seconds, show prompt
+      setTimeout(() => {
+        if (!audioStarted) {
+          showClickPrompt();
+        }
+      }, 2000);
+    }, 500);
+  });
 
   // Start typing lyrics - ADJUST delays array above to match your audio timing
   typeLine(lyrics[0], "line1", delays[0]);
