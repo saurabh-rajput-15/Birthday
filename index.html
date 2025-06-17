@@ -366,24 +366,10 @@ Volume Alert Styles */
     "I'll trust the universe will always bring me to you..."
   ];
   // Start time (in ms) for each line after music starts
-  const delays = [7000, 9000, 11000];
-  const speeds = 40; // ms per character for typing
+  const delays = [000, 7000, 9000];
+  const speeds = 30; // ms per character for typing
   
-  // Show alert immediately on page load
-  document.addEventListener('DOMContentLoaded', function() {
-    const playBtn = document.getElementById('play-btn');
-    
-    // Show JavaScript alert
-    setTimeout(() => {
-      // Display native JavaScript alert
-      if(confirm("💕 Turn up your volume for birthday music! Click OK to play.")) {
-        playMusicAndLyrics();
-      } else {
-        // Show button if user cancels alert
-        playBtn.style.display = 'block';
-      }
-    }, 1000);
-  });
+  
 
   // TYPING EFFECT FUNCTION
   function typeLine(text, elementId, delay) {
