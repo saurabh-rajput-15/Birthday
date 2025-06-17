@@ -303,57 +303,85 @@
   const speeds = 40; // typing speed (ms per character)
 
   let audioStarted = false;
-  let audioPlaying = false;
+  let audioLoaded = false;
 
   // Function to start audio
   function startAudio() {
     const music = document.getElementById("bg-music");
-    if (music && !audioPlaying) {
-      // Check if audio is loaded
-      if (music.readyState >= 2) { // HAVE_CURRENT_DATA or better
-        music.play().then(() => {
-          console.log("Audio started successfully");
-          audioPlaying = true;
-          audioStarted = true;
-          // Alert user to turn up volume
-          setTimeout(() => {
-            alert("🎵 Turn up your volume for the best experience! 🎵");
-          }, 500);
-        }).catch((error) => {
-          console.log("Audio play failed:", error);
-          showClickPrompt();
-        });
-      } else {
-        // Wait for audio to load
-        music.addEventListener('canplay', () => {
-          startAudio();
-        }, { once: true });
-      }
-    }
-  }
-
-  // Show click prompt
-  function showClickPrompt() {
-    if (!audioStarted) {
-      alert("🎵 Click anywhere on the page to start the birthday music! 🎂");
+    if (music && !audioStarted) {
+      console.log("Attempting to play audio...");
+      console.log("Audio readyState:", music.readyState);
+      console.log("Audio src:", music.currentSrc || music.src);
+      
+      music.play().then(() => {
+        console.log("✅ Audio started successfully");
+        audioStarted = true;
+        // Alert user to turn up volume
+        setTimeout(() => {
+          alert("🎵 Turn up your volume for the best experience! 🎵");
+        }, 1000);
+      }).catch((error) => {
+        console.log("❌ Audio play failed:", error.message);
+        alert("🎵 Click anywhere on the page to start the birthday music! 🎂");
+      });
     }
   }
 
   // Function to handle user interaction
   function handleUserInteraction() {
     if (!audioStarted) {
+      console.log("User interaction detected, trying to play audio...");
       startAudio();
-      // Remove event listeners after first interaction
-      document.removeEventListener('click', handleUserInteraction);
-      document.removeEventListener('keydown', handleUserInteraction);
-      document.removeEventListener('touchstart', handleUserInteraction);
     }
   }
 
-  // Add event listeners for user interaction immediately
+  // Add event listeners for user interaction
   document.addEventListener('click', handleUserInteraction);
   document.addEventListener('keydown', handleUserInteraction);
   document.addEventListener('touchstart', handleUserInteraction);
+
+  // Audio event listeners to debug loading issues
+  window.addEventListener('DOMContentLoaded', () => {
+    const music = document.getElementById("bg-music");
+    if (music) {
+      // Check if audio source is loading
+      music.addEventListener('loadstart', () => {
+        console.log("🔄 Audio loading started");
+      });
+      
+      music.addEventListener('loadeddata', () => {
+        console.log("✅ Audio data loaded");
+        audioLoaded = true;
+      });
+      
+      music.addEventListener('canplay', () => {
+        console.log("✅ Audio can start playing");
+        // Try autoplay once audio is ready
+        if (!audioStarted) {
+          setTimeout(startAudio, 100);
+        }
+      });
+      
+      music.addEventListener('error', (e) => {
+        console.log("❌ Audio error:", e);
+        console.log("Error details:", music.error);
+        alert("❌ Audio file could not be loaded. Please check if 'blue.mp3' exists in the correct path!");
+      });
+      
+      // Force load the audio
+      music.load();
+      
+      // Show initial prompt after a delay
+      setTimeout(() => {
+        if (!audioStarted && !audioLoaded) {
+          console.log("Audio not loaded after 3 seconds, showing prompt");
+          alert("🎵 Click anywhere to start the birthday music! (Audio may need user interaction) 🎂");
+        }
+      }, 3000);
+    } else {
+      console.log("❌ Audio element not found!");
+    }
+  });
 
   function typeLine(text, elementId, delay) {
     setTimeout(() => {
@@ -371,19 +399,6 @@
       }
     }, delay);
   }
-
-  // Try autoplay when page loads
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      startAudio();
-      // If audio didn't start after 2 seconds, show prompt
-      setTimeout(() => {
-        if (!audioStarted) {
-          showClickPrompt();
-        }
-      }, 2000);
-    }, 500);
-  });
 
   // Start typing lyrics - ADJUST delays array above to match your audio timing
   typeLine(lyrics[0], "line1", delays[0]);
