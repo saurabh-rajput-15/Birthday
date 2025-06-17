@@ -298,8 +298,49 @@
     "I'll trust the universe will always bring me to you..."
   ];
 
-  const delays = [7000, 9000, 11000]; // When each line starts (in ms)
+  // Adjust these delays to match your audio timing - modify as needed based on audio speed
+  const delays = [7000, 9000, 11000]; // When each line starts (in ms) - ADJUST THESE TO MATCH AUDIO
   const speeds = 40; // typing speed (ms per character)
+
+  let audioStarted = false;
+  let userInteracted = false;
+
+  // Function to start audio
+  function startAudio() {
+    if (!audioStarted) {
+      const music = document.getElementById("bg-music");
+      if (music) {
+        music.play().then(() => {
+          console.log("Audio started successfully");
+          audioStarted = true;
+          // Alert user to turn up volume
+          setTimeout(() => {
+            alert("🎵 Turn up your volume for the best experience! 🎵");
+          }, 1000);
+        }).catch((error) => {
+          console.log("Autoplay failed:", error);
+          // Show alert asking user to click to play music
+          alert("Click anywhere on the page to start the birthday music! 🎵");
+        });
+      }
+    }
+  }
+
+  // Function to handle user interaction
+  function handleUserInteraction() {
+    if (!userInteracted) {
+      userInteracted = true;
+      startAudio();
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('keydown', handleUserInteraction);
+      document.removeEventListener('touchstart', handleUserInteraction);
+    }
+  }
+
+  // Add event listeners for user interaction
+  document.addEventListener('click', handleUserInteraction);
+  document.addEventListener('keydown', handleUserInteraction);
+  document.addEventListener('touchstart', handleUserInteraction);
 
   function typeLine(text, elementId, delay) {
     setTimeout(() => {
@@ -316,19 +357,13 @@
     }, delay);
   }
 
-  // Start playing music when first line starts
+  // Try to start audio immediately (will work if autoplay is allowed)
   setTimeout(() => {
-    const music = document.getElementById("bg-music");
-    if (music) {
-      music.play().catch(() => {
-        console.log("Autoplay blocked or user interaction required.");
-      });
-    }
-  }, delays[0]);
+    startAudio();
+  }, 100);
 
+  // Start typing lyrics - ADJUST delays array above to match your audio timing
   typeLine(lyrics[0], "line1", delays[0]);
   typeLine(lyrics[1], "line2", delays[1]);
   typeLine(lyrics[2], "line3", delays[2]);
 </script>
-</body>
-</html>
