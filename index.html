@@ -343,6 +343,7 @@ Volume Alert Styles */
 <p class="name">Hetu 💗🎀</p>
 </div>
 <div class="lyrics text" style="margin-top: 2em;"><p id="line1"></p><p id="line2"></p><p id="line3"></p></div>
+
 <!-- AUDIO ELEMENT -->
 <audio id="bg-music" preload="auto" style="width:0;height:0;opacity:0;">
   <source src="blue.mp3" type="audio/mpeg" />
@@ -357,7 +358,6 @@ Volume Alert Styles */
   <p id="line3"></p>
 </div>
 
-
 <script>
   // LYRICS AND TIMING
   const lyrics = [
@@ -369,22 +369,20 @@ Volume Alert Styles */
   const delays = [7000, 9000, 11000];
   const speeds = 40; // ms per character for typing
   
-  // Show volume alert immediately on page load
+  // Show alert immediately on page load
   document.addEventListener('DOMContentLoaded', function() {
-    const volumeAlert = document.getElementById('volume-alert');
     const playBtn = document.getElementById('play-btn');
     
-    // Show the volume alert
+    // Show JavaScript alert
     setTimeout(() => {
-      volumeAlert.classList.add('show');
-      playBtn.style.display = 'block'; // Also show play button
+      // Display native JavaScript alert
+      if(confirm("💕 Turn up your volume for birthday music! Click OK to play.")) {
+        playMusicAndLyrics();
+      } else {
+        // Show button if user cancels alert
+        playBtn.style.display = 'block';
+      }
     }, 1000);
-    
-    // Make the volume alert clickable to play music
-    volumeAlert.addEventListener('click', function() {
-      playMusicAndLyrics();
-      volumeAlert.classList.remove('show');
-    });
   });
 
   // TYPING EFFECT FUNCTION
@@ -405,13 +403,9 @@ Volume Alert Styles */
     }, delay);
   }
 
-  // MUSIC AUTOPLAY HANDLER
+  // MUSIC PLAY HANDLER
   function playMusicAndLyrics() {
     const music = document.getElementById("bg-music");
-    const volumeAlert = document.getElementById('volume-alert');
-    
-    // Hide volume alert when playing
-    volumeAlert.classList.remove('show');
     
     music.volume = 1.0; // Ensure volume is at maximum
     music.play().then(() => {
@@ -428,16 +422,16 @@ Volume Alert Styles */
 
   // User interaction triggers
   document.addEventListener('click', function(e) {
-    // Only respond to clicks that aren't on the volume alert or play button
-    if (!e.target.closest('#volume-alert') && !e.target.closest('#play-btn')) {
+    // Only respond to clicks that aren't on the play button
+    if (!e.target.closest('#play-btn')) {
       playMusicAndLyrics();
     }
   }, {once: true});
   
   document.addEventListener('keydown', playMusicAndLyrics, {once: true});
   document.addEventListener('touchstart', function(e) {
-    // Only respond to touches that aren't on the volume alert or play button
-    if (!e.target.closest('#volume-alert') && !e.target.closest('#play-btn')) {
+    // Only respond to touches that aren't on the play button
+    if (!e.target.closest('#play-btn')) {
       playMusicAndLyrics();
     }
   }, {once: true});
