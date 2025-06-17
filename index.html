@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
@@ -18,11 +17,34 @@
 
       body {
         background: #000000ec;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
       }
 
       .name{
         font-size: 1.1rem;
         font-weight: 600;
+      }
+      
+      /* Timer styles */
+      #countdown-container {
+        text-align: center;
+      }
+      
+      #countdown-message {
+        color: #a88679;
+        font-family: 'Lato', sans-serif;
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+      
+      #countdown-timer {
+        color: #a88679;
+        font-family: 'Lato', sans-serif;
+        font-size: 3rem;
+        font-weight: bold;
       }
 
       #cake {
@@ -46,8 +68,13 @@
         height: 35px;
         transform: translateY(-300px);
         backface-visibility: hidden;
-        animation: in 500ms 6s ease-out forwards;
       }
+      
+      /* Add this class to activate the animation when content is shown */
+      .animate-cake {
+        animation: in 500ms 0.5s ease-out forwards;
+      }
+      
       .cake:after,
       .cake:before {
         background: rgba(255, 0, 0, 0.4);
@@ -77,20 +104,22 @@
         width: 6.66666667px;
         height: 18px;
       }
-      .fuego:nth-child(1) {
-        animation: fuego 2s 6.5s infinite;
+      
+      /* Add these classes to activate animations when content is shown */
+      .animate-fuego .fuego:nth-child(1) {
+        animation: fuego 2s 1s infinite;
       }
-      .fuego:nth-child(2) {
-        animation: fuego 1.5s 6.5s infinite;
+      .animate-fuego .fuego:nth-child(2) {
+        animation: fuego 1.5s 1s infinite;
       }
-      .fuego:nth-child(3) {
-        animation: fuego 1s 6.5s infinite;
+      .animate-fuego .fuego:nth-child(3) {
+        animation: fuego 1s 1s infinite;
       }
-      .fuego:nth-child(4) {
-        animation: fuego 0.5s 6.5s infinite;
+      .animate-fuego .fuego:nth-child(4) {
+        animation: fuego 0.5s 1s infinite;
       }
-      .fuego:nth-child(5) {
-        animation: fuego 0.2s 6.5s infinite;
+      .animate-fuego .fuego:nth-child(5) {
+        animation: fuego 0.2s 1s infinite;
       }
 
       /* ============================================== Animation Fire
@@ -121,92 +150,41 @@
         font-weight: 300;
         font-style:italic;
         text-align: center;
-        h1 {
-          font-size: 1.4em;
-        }
       }
-Volume Alert Styles */
-  .volume-alert {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(168, 134, 121, 0.9);
-    color: white;
-    padding: 15px 25px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    z-index: 1000;
-    font-family: 'Lato', sans-serif;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    pointer-events: none;
-  }
-
-  .volume-alert.show {
-    opacity: 1;
-    animation: pulse 2s infinite;
-    pointer-events: auto;
-  }
-
-  .volume-icon {
-    font-size: 24px;
-  }
-
-  @keyframes pulse {
-    0% { transform: translateX(-50%) scale(1); }
-    50% { transform: translateX(-50%) scale(1.05); }
-    100% { transform: translateX(-50%) scale(1); }
-  }
-
-  #play-btn {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: #a88679;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.2em;
-    transition: all 0.3s ease;
-  }
-
-  #play-btn:hover {
-    background-color: #8b6a60;
-    transform: scale(1.05);
-  }
       
-      /* Timer styles */
-      #countdown-container {
+      .text h1 {
+        font-size: 1.4em;
+      }
+
+      #play-btn {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #a88679;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1.2em;
+        transition: all 0.3s ease;
+      }
+
+      #play-btn:hover {
+        background-color: #8b6a60;
+        transform: scale(1.05);
+      }
+      
+      #birthday-content {
         text-align: center;
+        position: relative;
       }
-      
-      #countdown-message {
-        color: #a88679;
-        font-family: 'Lato', sans-serif;
-        font-size: 2rem;
-        margin-bottom: 20px;
-      }
-      
-      #countdown-timer {
-        color: #a88679;
-        font-family: 'Lato', sans-serif;
-        font-size: 3rem;
-        font-weight: bold;
-      }
-
-
 </style>
 </head>
 <body>
 
 <!-- Countdown Container - Only this will be shown initially -->
 <div id="countdown-container">
-  <div id="countdown-message"> surprise will appear in 💗</div>
+  <div id="countdown-message">surprise will appear in 💗</div>
   <div id="countdown-timer">00:00:00</div>
 </div>
 
@@ -368,8 +346,6 @@ Volume Alert Styles */
 <rect fill="#fefae9" height="4" width="180" x="10" y="475.571"></rect>
 </svg>
 
-
-
   <div class="text">
     <h1>happy birthday Dear</h1>
     <p class="name">Hetu 💗🎀</p>
@@ -380,7 +356,7 @@ Volume Alert Styles */
     <source src="blue.mp3" type="audio/mpeg" />
     Your browser does not support the audio element.
   </audio>
-  <button id="play-btn" style="display:none;">Play Birthday Music</button>
+  <button id="play-btn" style="display:none;">Click Me! 💕</button>
   
   <!-- LYRICS MARKUP -->
   <div class="lyrics text" style="margin-top: 2em;">
@@ -398,6 +374,8 @@ Volume Alert Styles */
   const countdownContainer = document.getElementById('countdown-container');
   const timerDisplay = document.getElementById('countdown-timer');
   const birthdayContent = document.getElementById('birthday-content');
+  const cakeElement = document.querySelector('.cake');
+  const playBtn = document.getElementById("play-btn");
   
   // LYRICS AND TIMING
   const lyrics = [
@@ -410,33 +388,86 @@ Volume Alert Styles */
   const delays = [1000, 5000, 7000];
   const speeds = 31; // ms per character for typing
   
-  // Update countdown timer every second
-  function updateTimer() {
-    const now = new Date();
-    const diff = targetDate - now;
+  // Restart SVG animations function (to ensure they start from beginning)
+  function restartSvgAnimations() {
+    // Get all animate elements in the SVG
+    const animates = document.querySelectorAll('svg animate');
     
-    if (diff <= 0) {
-      // It's time! Hide countdown and show birthday content
-      clearInterval(timerInterval);
-      countdownContainer.style.display = 'none';
-      birthdayContent.style.display = 'block';
+    // Remove them temporarily from the DOM
+    animates.forEach(animate => {
+      const parent = animate.parentNode;
+      const oldAnimate = animate;
+      const newAnimate = oldAnimate.cloneNode(true);
+      parent.removeChild(oldAnimate);
       
-      // Auto start the celebration
-      playMusicAndLyrics();
-    } else {
-      // Format the remaining time (only hours:minutes:seconds)
-      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      
-      timerDisplay.textContent = 
-        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    }
+      // Small delay to ensure DOM updates
+      setTimeout(() => {
+        parent.appendChild(newAnimate);
+      }, 10);
+    });
   }
   
-  // Update timer immediately and then every second
-  updateTimer();
-  const timerInterval = setInterval(updateTimer, 1000);
+  // Show birthday content function
+  function showBirthdayContent() {
+    countdownContainer.style.display = 'none';
+    birthdayContent.style.display = 'block';
+    
+    // Add animation classes to cake and flames after a short delay
+    setTimeout(() => {
+      cakeElement.classList.add('animate-cake');
+      cakeElement.classList.add('animate-fuego');
+      
+      // Restart SVG animations
+      restartSvgAnimations();
+    }, 100);
+  }
+  
+  // Check if we need to show timer or birthday content
+  function checkTimeAndDisplay() {
+    const now = new Date();
+    
+    // If we've passed the target date, show birthday content immediately
+    if (now >= targetDate) {
+      showBirthdayContent();
+      // Save to localStorage that we've shown the content
+      localStorage.setItem('birthdayShown', 'true');
+      return true;
+    }
+    return false;
+  }
+  
+  // Check if we should show timer or birthday content
+  const isPastBirthday = checkTimeAndDisplay();
+  
+  // Only start timer if not past birthday
+  if (!isPastBirthday) {
+    // Update countdown timer every second
+    function updateTimer() {
+      const now = new Date();
+      const diff = targetDate - now;
+      
+      if (diff <= 0) {
+        // It's time! Hide countdown and show birthday content
+        clearInterval(timerInterval);
+        showBirthdayContent();
+        
+        // Auto start the celebration
+        playMusicAndLyrics();
+      } else {
+        // Format the remaining time (only hours:minutes:seconds)
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        timerDisplay.textContent = 
+          `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }
+    }
+    
+    // Update timer immediately and then every second
+    updateTimer();
+    const timerInterval = setInterval(updateTimer, 1000);
+  }
 
   // TYPING EFFECT FUNCTION
   function typeLine(text, elementId, delay) {
@@ -459,10 +490,12 @@ Volume Alert Styles */
   // MUSIC PLAY HANDLER
   function playMusicAndLyrics() {
     const music = document.getElementById("bg-music");
-    const playBtn = document.getElementById("play-btn");
     
     music.volume = 1.0; // Ensure volume is at maximum
     music.play().then(() => {
+      // Hide play button after successful play
+      playBtn.style.display = "none";
+      
       // Start lyrics with respective delays
       typeLine(lyrics[0], "line1", delays[0]);
       typeLine(lyrics[1], "line2", delays[1]);
@@ -470,7 +503,24 @@ Volume Alert Styles */
     }).catch(() => {
       // Show fallback button if autoplay fails
       playBtn.style.display = "block";
-      playBtn.onclick = playMusicAndLyrics;
+    });
+  }
+  
+  // Add click event to play button (and hide it after click)
+  playBtn.addEventListener('click', function() {
+    playMusicAndLyrics();
+    this.style.display = 'none';
+  });
+  
+  // If past birthday time, add a click handler to the document for playing music
+  if (isPastBirthday) {
+    document.addEventListener('click', function handleInitialClick(e) {
+      // Don't trigger if clicking on the play button (it has its own handler)
+      if (e.target !== playBtn) {
+        playMusicAndLyrics();
+        // Remove this event listener after first click
+        document.removeEventListener('click', handleInitialClick);
+      }
     });
   }
 </script>
