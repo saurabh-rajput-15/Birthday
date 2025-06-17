@@ -312,6 +312,24 @@
   // Start time (in ms) for each line after music starts
   const delays = [7000, 9000, 11000];
   const speeds = 40; // ms per character for typing
+  
+  // Show volume alert immediately on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    const volumeAlert = document.getElementById('volume-alert');
+    const playBtn = document.getElementById('play-btn');
+    
+    // Show the volume alert
+    setTimeout(() => {
+      volumeAlert.classList.add('show');
+      playBtn.style.display = 'block'; // Also show play button
+    }, 1000);
+    
+    // Make the volume alert clickable to play music
+    volumeAlert.addEventListener('click', function() {
+      playMusicAndLyrics();
+      volumeAlert.classList.remove('show');
+    });
+  });
 
   // TYPING EFFECT FUNCTION
   function typeLine(text, elementId, delay) {
@@ -334,6 +352,12 @@
   // MUSIC AUTOPLAY HANDLER
   function playMusicAndLyrics() {
     const music = document.getElementById("bg-music");
+    const volumeAlert = document.getElementById('volume-alert');
+    
+    // Hide volume alert when playing
+    volumeAlert.classList.remove('show');
+    
+    music.volume = 1.0; // Ensure volume is at maximum
     music.play().then(() => {
       document.getElementById("play-btn").style.display = "none";
       // Start lyrics with respective delays
@@ -347,9 +371,20 @@
   }
 
   // User interaction triggers
-  document.addEventListener('click', playMusicAndLyrics, {once: true});
+  document.addEventListener('click', function(e) {
+    // Only respond to clicks that aren't on the volume alert or play button
+    if (!e.target.closest('#volume-alert') && !e.target.closest('#play-btn')) {
+      playMusicAndLyrics();
+    }
+  }, {once: true});
+  
   document.addEventListener('keydown', playMusicAndLyrics, {once: true});
-  document.addEventListener('touchstart', playMusicAndLyrics, {once: true});
+  document.addEventListener('touchstart', function(e) {
+    // Only respond to touches that aren't on the volume alert or play button
+    if (!e.target.closest('#volume-alert') && !e.target.closest('#play-btn')) {
+      playMusicAndLyrics();
+    }
+  }, {once: true});
 
   // Fallback button
   document.getElementById("play-btn").onclick = playMusicAndLyrics;
