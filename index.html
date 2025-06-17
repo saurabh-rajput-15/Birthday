@@ -409,7 +409,10 @@
   
   // Show birthday content function
   function showBirthdayContent() {
-    countdownContainer.style.display = 'none';
+    // Remove the countdown container completely from the DOM
+if (countdownContainer && countdownContainer.parentNode) {
+  countdownContainer.parentNode.removeChild(countdownContainer);
+}
     birthdayContent.style.display = 'block';
     
     // Add animation classes to cake and flames after a short delay
