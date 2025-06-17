@@ -188,6 +188,8 @@ Volume Alert Styles */
 <div id="countdown-timer" class="text" style="margin: 20px auto; font-size: 1.5em; color: #a88679;">
   Surprise will begin in: <span id="timer-value">Loading...</span>
 </div>
+<div>
+</div>
 
 
 <div class="cake">
@@ -364,7 +366,7 @@ Volume Alert Styles */
   <p id="line2"></p>
   <p id="line3"></p>
 </div>
-
+<!-- SCRIPT MODIFICATION -->
 <script>
   // LYRICS AND TIMING
   const lyrics = [
@@ -373,10 +375,56 @@ Volume Alert Styles */
     "I'll trust the universe will always bring me to you..."
   ];
   // Start time (in ms) for each line after music starts
-  const delays = [1000,5000, 8000];
+  const delays = [1000, 5000, 8000];
   const speeds = 30; // ms per character for typing
   
+  // Target date: June 18, 2025, 00:00:00 (midnight)
+  const targetDate = new Date('2025-06-18T00:00:00');
+  const timerElement = document.getElementById('timer-value');
+  const countdownTimer = document.getElementById('countdown-timer');
+  const playBtn = document.getElementById('play-btn');
   
+  // Initially hide the cake and other elements
+  document.querySelector('.cake').style.display = 'none';
+  document.getElementById('cake').style.display = 'none';
+  document.querySelector('.text').style.display = 'none';
+  document.querySelectorAll('.lyrics.text').forEach(el => el.style.display = 'none');
+  playBtn.style.display = 'none';
+  
+  // Update countdown timer every second
+  function updateTimer() {
+    const now = new Date();
+    const diff = targetDate - now;
+    
+    if (diff <= 0) {
+      // It's time! Show everything and start the celebration
+      clearInterval(timerInterval);
+      countdownTimer.style.display = 'none';
+      document.querySelector('.cake').style.display = 'block';
+      document.getElementById('cake').style.display = 'block';
+      document.querySelector('.text').style.display = 'block';
+      document.querySelectorAll('.lyrics.text').forEach(el => el.style.display = 'block');
+      
+      // Auto start the celebration
+      setTimeout(playMusicAndLyrics, 2000);
+      
+      // Show play button as fallback
+      playBtn.style.display = 'block';
+    } else {
+      // Format the remaining time
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      timerElement.textContent = 
+        `${days} days, ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+  }
+  
+  // Update timer immediately and then every second
+  updateTimer();
+  const timerInterval = setInterval(updateTimer, 1000);
 
   // TYPING EFFECT FUNCTION
   function typeLine(text, elementId, delay) {
@@ -402,33 +450,36 @@ Volume Alert Styles */
     
     music.volume = 1.0; // Ensure volume is at maximum
     music.play().then(() => {
-      document.getElementById("play-btn").style.display = "none";
+      playBtn.style.display = "none";
       // Start lyrics with respective delays
       typeLine(lyrics[0], "line1", delays[0]);
       typeLine(lyrics[1], "line2", delays[1]);
       typeLine(lyrics[2], "line3", delays[2]);
     }).catch(() => {
       // Show fallback button if autoplay fails
-      document.getElementById("play-btn").style.display = "block";
+      playBtn.style.display = "block";
     });
   }
 
-  // User interaction triggers
-  document.addEventListener('click', function(e) {
-    // Only respond to clicks that aren't on the play button
-    if (!e.target.closest('#play-btn')) {
-      playMusicAndLyrics();
-    }
-  }, {once: true});
-  
-  document.addEventListener('keydown', playMusicAndLyrics, {once: true});
-  document.addEventListener('touchstart', function(e) {
-    // Only respond to touches that aren't on the play button
-    if (!e.target.closest('#play-btn')) {
-      playMusicAndLyrics();
-    }
-  }, {once: true});
+  // Only enable these event listeners if it's already past the target date
+  if (new Date() >= targetDate) {
+    // User interaction triggers
+    document.addEventListener('click', function(e) {
+      // Only respond to clicks that aren't on the play button
+      if (!e.target.closest('#play-btn')) {
+        playMusicAndLyrics();
+      }
+    }, {once: true});
+    
+    document.addEventListener('keydown', playMusicAndLyrics, {once: true});
+    document.addEventListener('touchstart', function(e) {
+      // Only respond to touches that aren't on the play button
+      if (!e.target.closest('#play-btn')) {
+        playMusicAndLyrics();
+      }
+    }, {once: true});
+  }
 
   // Fallback button
-  document.getElementById("play-btn").onclick = playMusicAndLyrics;
+  playBtn.onclick = playMusicAndLyrics;
 </script>
