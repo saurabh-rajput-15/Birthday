@@ -145,23 +145,23 @@ Volume Alert Styles */
     transition: opacity 0.5s ease;
     pointer-events: none;
   }
-  
+
   .volume-alert.show {
     opacity: 1;
     animation: pulse 2s infinite;
     pointer-events: auto;
   }
-  
+
   .volume-icon {
     font-size: 24px;
   }
-  
+
   @keyframes pulse {
     0% { transform: translateX(-50%) scale(1); }
     50% { transform: translateX(-50%) scale(1.05); }
     100% { transform: translateX(-50%) scale(1); }
   }
-  
+
   #play-btn {
     display: block;
     margin: 20px auto;
@@ -174,32 +174,52 @@ Volume Alert Styles */
     font-size: 1.2em;
     transition: all 0.3s ease;
   }
-  
+
   #play-btn:hover {
     background-color: #8b6a60;
     transform: scale(1.05);
   }
+      
+      /* Timer styles */
+      #countdown-container {
+        text-align: center;
+      }
+      
+      #countdown-message {
+        color: #a88679;
+        font-family: 'Lato', sans-serif;
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+      
+      #countdown-timer {
+        color: #a88679;
+        font-family: 'Lato', sans-serif;
+        font-size: 3rem;
+        font-weight: bold;
+      }
 
-    </style>
+
+</style>
 </head>
 <body>
 
-<!-- Add this countdown timer display above the cake -->
-<div id="countdown-timer" class="text" style="margin: 20px auto; font-size: 1.5em; color: #a88679;">
-  Surprise will begin in: <span id="timer-value">Loading...</span>
-</div>
-<div>
+<!-- Countdown Container - Only this will be shown initially -->
+<div id="countdown-container">
+  <div id="countdown-message"> surprise will appear in 💗</div>
+  <div id="countdown-timer">00:00:00</div>
 </div>
 
-
-<div class="cake">
-<div class="fuego"></div>
-<div class="fuego"></div>
-<div class="fuego"></div>
-<div class="fuego"></div>
-<div class="fuego"></div>
-</div>
-<svg enable-background="new 0 0 200 500" height="500px" id="cake" version="1.1" viewbox="0 0 200 500" width="200px" x="0px" xml:space="preserve" y="0px">
+<!-- All birthday content - Initially hidden -->
+<div id="birthday-content" style="display: none;">
+  <div class="cake">
+    <div class="fuego"></div>
+    <div class="fuego"></div>
+    <div class="fuego"></div>
+    <div class="fuego"></div>
+    <div class="fuego"></div>
+  </div>
+  <svg enable-background="new 0 0 200 500" height="500px" id="cake" version="1.1" viewbox="0 0 200 500" width="200px" x="0px" xml:space="preserve" y="0px">
 <path d="M173.667-13.94c-49.298,0-102.782,0-147.334,0c-3.999,0-4-16.002,0-16.002
         c44.697,0,96.586,0,147.334,0C177.667-29.942,177.668-13.94,173.667-13.94z" fill="#a88679">
 <animate attributename="d" begin="relleno_2.end" calcmode="spline" dur="0.3s" fill="freeze" id="bizcocho_3" keysplines="0 0 1 1; 0 0 1 1" values="
@@ -347,49 +367,48 @@ Volume Alert Styles */
 </path>
 <rect fill="#fefae9" height="4" width="180" x="10" y="475.571"></rect>
 </svg>
-<div class="text">
-<h1>happy birthday Dear</h1>
-<p class="name">Hetu 💗🎀</p>
-</div>
-<div class="lyrics text" style="margin-top: 2em;"><p id="line1"></p><p id="line2"></p><p id="line3"></p></div>
 
-<!-- AUDIO ELEMENT -->
-<audio id="bg-music" preload="auto" style="width:0;height:0;opacity:0;">
-  <source src="blue.mp3" type="audio/mpeg" />
-  Your browser does not support the audio element.
-</audio>
-<button id="play-btn" style="display:none;">Play Birthday Music</button>
 
-<!-- LYRICS MARKUP -->
-<div class="lyrics text" style="margin-top: 2em;">
-  <p id="line1"></p>
-  <p id="line2"></p>
-  <p id="line3"></p>
+
+  <div class="text">
+    <h1>happy birthday Dear</h1>
+    <p class="name">Hetu 💗🎀</p>
+  </div>
+  
+  <!-- AUDIO ELEMENT -->
+  <audio id="bg-music" preload="auto" style="width:0;height:0;opacity:0;">
+    <source src="blue.mp3" type="audio/mpeg" />
+    Your browser does not support the audio element.
+  </audio>
+  <button id="play-btn" style="display:none;">Play Birthday Music</button>
+  
+  <!-- LYRICS MARKUP -->
+  <div class="lyrics text" style="margin-top: 2em;">
+    <p id="line1"></p>
+    <p id="line2"></p>
+    <p id="line3"></p>
+  </div>
 </div>
-<!-- SCRIPT MODIFICATION -->
+
 <script>
+  // Target date: June 18, 2025, 00:00:00 (midnight)
+  const targetDate = new Date('2025-06-18T00:00:00');
+  
+  // Get elements
+  const countdownContainer = document.getElementById('countdown-container');
+  const timerDisplay = document.getElementById('countdown-timer');
+  const birthdayContent = document.getElementById('birthday-content');
+  
   // LYRICS AND TIMING
   const lyrics = [
     "It's stuck with you forever....,",
     "so promise you won't let it go...,",
     "I'll trust the universe will always bring me to you..."
   ];
+  
   // Start time (in ms) for each line after music starts
-  const delays = [1000, 5000, 8000];
-  const speeds = 30; // ms per character for typing
-  
-  // Target date: June 18, 2025, 00:00:00 (midnight)
-  const targetDate = new Date('2025-06-18T00:00:00');
-  const timerElement = document.getElementById('timer-value');
-  const countdownTimer = document.getElementById('countdown-timer');
-  const playBtn = document.getElementById('play-btn');
-  
-  // Initially hide the cake and other elements
-  document.querySelector('.cake').style.display = 'none';
-  document.getElementById('cake').style.display = 'none';
-  document.querySelector('.text').style.display = 'none';
-  document.querySelectorAll('.lyrics.text').forEach(el => el.style.display = 'none');
-  playBtn.style.display = 'none';
+  const delays = [1000, 5000, 7000];
+  const speeds = 31; // ms per character for typing
   
   // Update countdown timer every second
   function updateTimer() {
@@ -397,28 +416,21 @@ Volume Alert Styles */
     const diff = targetDate - now;
     
     if (diff <= 0) {
-      // It's time! Show everything and start the celebration
+      // It's time! Hide countdown and show birthday content
       clearInterval(timerInterval);
-      countdownTimer.style.display = 'none';
-      document.querySelector('.cake').style.display = 'block';
-      document.getElementById('cake').style.display = 'block';
-      document.querySelector('.text').style.display = 'block';
-      document.querySelectorAll('.lyrics.text').forEach(el => el.style.display = 'block');
+      countdownContainer.style.display = 'none';
+      birthdayContent.style.display = 'block';
       
       // Auto start the celebration
-      setTimeout(playMusicAndLyrics, 2000);
-      
-      // Show play button as fallback
-      playBtn.style.display = 'block';
+      playMusicAndLyrics();
     } else {
-      // Format the remaining time
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      // Format the remaining time (only hours:minutes:seconds)
       const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((diff % (1000 * 60)) / 1000);
       
-      timerElement.textContent = 
-        `${days} days, ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      timerDisplay.textContent = 
+        `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
   }
   
@@ -447,10 +459,10 @@ Volume Alert Styles */
   // MUSIC PLAY HANDLER
   function playMusicAndLyrics() {
     const music = document.getElementById("bg-music");
+    const playBtn = document.getElementById("play-btn");
     
     music.volume = 1.0; // Ensure volume is at maximum
     music.play().then(() => {
-      playBtn.style.display = "none";
       // Start lyrics with respective delays
       typeLine(lyrics[0], "line1", delays[0]);
       typeLine(lyrics[1], "line2", delays[1]);
@@ -458,28 +470,9 @@ Volume Alert Styles */
     }).catch(() => {
       // Show fallback button if autoplay fails
       playBtn.style.display = "block";
+      playBtn.onclick = playMusicAndLyrics;
     });
   }
-
-  // Only enable these event listeners if it's already past the target date
-  if (new Date() >= targetDate) {
-    // User interaction triggers
-    document.addEventListener('click', function(e) {
-      // Only respond to clicks that aren't on the play button
-      if (!e.target.closest('#play-btn')) {
-        playMusicAndLyrics();
-      }
-    }, {once: true});
-    
-    document.addEventListener('keydown', playMusicAndLyrics, {once: true});
-    document.addEventListener('touchstart', function(e) {
-      // Only respond to touches that aren't on the play button
-      if (!e.target.closest('#play-btn')) {
-        playMusicAndLyrics();
-      }
-    }, {once: true});
-  }
-
-  // Fallback button
-  playBtn.onclick = playMusicAndLyrics;
 </script>
+</body>
+</html>
